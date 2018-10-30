@@ -45,7 +45,14 @@ __unused static CGFloat SLKPointSizeDifferenceForCategory(NSString *category)
 
 __unused static CGRect SLKKeyWindowBounds()
 {
-    return [[UIApplication sharedApplication] keyWindow].bounds;
+    Class UIApplicationClass = NSClassFromString(@"UIApplication");
+    BOOL hasApplication = UIApplicationClass && [UIApplicationClass respondsToSelector:@selector(sharedApplication)];
+    if (hasApplication) {
+        UIApplication * app = [UIApplicationClass performSelector:@selector(sharedApplication)];
+        return [app keyWindow].bounds;
+    }
+
+    return CGRectZero;
 }
 
 __unused static CGRect SLKRectInvert(CGRect rect)
